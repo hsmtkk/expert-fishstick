@@ -56,6 +56,21 @@ resource "aws_codebuild_project" "codebuild" {
   }
 }
 
+resource "aws_codebuild_webhook" "codebuild" {
+  project_name = aws_codebuild_project.codebuild.name
+  build_type   = "BUILD"
+  filter_group {
+    filter {
+      type    = "EVENT"
+      pattern = "PUSH"
+    }
+    filter {
+      type    = "BASE_REF"
+      pattern = "master"
+    }
+  }
+}
+
 resource "aws_dynamodb_table" "dynamodb" {
   name           = "${var.project}-dynamodb"
   read_capacity  = 1
