@@ -1,10 +1,10 @@
 variable "region" {
-    type = string
-    default = "ap-northeast-1"
+  type    = string
+  default = "ap-northeast-1"
 }
 
 variable "project" {
-    type = string
-    default = "expert-fishstick"
+  type    = string
+  default = "expert-fishstick"
 }
 
