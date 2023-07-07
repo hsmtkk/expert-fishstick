@@ -64,10 +64,6 @@ resource "aws_codebuild_webhook" "codebuild" {
       type    = "EVENT"
       pattern = "PUSH"
     }
-    filter {
-      type    = "BASE_REF"
-      pattern = "master"
-    }
   }
 }
 
