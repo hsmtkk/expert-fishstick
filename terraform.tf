@@ -90,6 +90,20 @@ resource "google_cloud_run_v2_service" "front" {
   }
 }
 
+data "google_iam_policy" "noauth" {
+  binding {
+    role    = "roles/run.invoker"
+    members = ["allUsers"]
+  }
+}
+
+resource "google_cloud_run_service_iam_policy" "noauth" {
+  location    = google_cloud_run_v2_service.front.location
+  project     = google_cloud_run_v2_service.front.project
+  service     = google_cloud_run_v2_service.front.name
+  policy_data = data.google_iam_policy.noauth.policy_data
+}
+
 resource "google_cloudbuild_trigger" "build" {
   filename = "cloudbuild.yaml"
   github {
@@ -99,4 +113,8 @@ resource "google_cloudbuild_trigger" "build" {
       branch = "main"
     }
   }
+}
+
+output "front_uri" {
+  value = google_cloud_run_v2_service.front.uri
 }

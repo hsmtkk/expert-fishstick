@@ -4,6 +4,7 @@ steps:
       - --cache=true
       - --cache-ttl=72h
       - --context=front
+      - --destination=${_REGION}-docker.pkg.dev/${PROJECT_ID}/registry/front:latest
       - --destination=${_REGION}-docker.pkg.dev/${PROJECT_ID}/registry/front:${COMMIT_SHA}
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     entrypoint: gcloud
