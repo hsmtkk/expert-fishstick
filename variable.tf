@@ -1,6 +1,6 @@
 variable "region" {
   type    = string
-  default = "ap-northeast-1"
+  default = "us-central1"
 }
 
 variable "project" {
@@ -8,3 +8,7 @@ variable "project" {
   default = "expert-fishstick"
 }
 
+variable "apis" {
+  type    = list(string)
+  default = ["artifactregistry", "cloudbuild", "cloudfunctions", "firestore", "run"]
+}

@@ -1,0 +1,20 @@
+steps:
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    dir: back
+    args:
+      - functions
+      - deploy
+      - back
+      - --gen2
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - front
+      - --execution-environment=gen2
+      - --image=hoge
+      - --region=${_REGION}
+substitutions:
+  _REGION: us-central1
