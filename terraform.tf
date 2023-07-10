@@ -23,9 +23,20 @@ data "archive_file" "back" {
 resource "random_pet" "back" {}
 
 resource "google_storage_bucket" "back" {
+  force_destroy = true
+  lifecycle_rule {
+    action {
+      type = "Delete"
+    }
+    condition {
+      age = 1
+    }
+  }
   location = var.region
   name     = "back-${random_pet.back.id}"
 }
+
+
 
 resource "google_storage_bucket_object" "back" {
   bucket = google_storage_bucket.back.name

@@ -1,4 +1,10 @@
 steps:
+  - name: gcr.io/kaniko-project/executor:latest
+    args:
+      - --cache=true
+      - --cache-ttl=72h
+      - --context=front
+      - --destination=${_REGION}-docker.pkg.dev/${PROJECT_ID}/registry/front:${COMMIT_SHA}
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     entrypoint: gcloud
     dir: back
@@ -7,6 +13,7 @@ steps:
       - deploy
       - back
       - --gen2
+      - --region=${_REGION}
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
     entrypoint: gcloud
     args:
@@ -14,7 +21,7 @@ steps:
       - deploy
       - front
       - --execution-environment=gen2
-      - --image=hoge
+      - --image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/registry/front:${COMMIT_SHA}
       - --region=${_REGION}
 substitutions:
   _REGION: us-central1
