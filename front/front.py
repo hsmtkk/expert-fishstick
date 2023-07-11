@@ -12,7 +12,7 @@ app = Flask(__name__)
 def scan():
     back_url = os.environ["BACK_URL"]
     print(f"{back_url=}")
-    response = requests.get(back_url, headers=get_headers())
+    response = requests.get(back_url, headers=get_headers(back_url))
     todos = response.json()
     return render_template("scan.html", todos=todos)
 
