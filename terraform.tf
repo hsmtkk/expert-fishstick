@@ -36,8 +36,6 @@ resource "google_storage_bucket" "back" {
   name     = "back-${random_pet.back.id}"
 }
 
-
-
 resource "google_storage_bucket_object" "back" {
   bucket = google_storage_bucket.back.name
   name   = data.archive_file.back.output_md5
@@ -75,6 +73,12 @@ resource "google_service_account" "front" {
   account_id = "front-runner"
 }
 
+resource "google_project_iam_member" "front" {
+  member  = "serviceAccount:${google_service_account.front.email}"
+  project = var.project
+  role    = "roles/run.invoker"
+}
+
 resource "google_cloud_run_v2_service" "front" {
   location = var.region
   name     = "front"
@@ -84,7 +88,7 @@ resource "google_cloud_run_v2_service" "front" {
         name  = "BACK_URL"
         value = google_cloudfunctions2_function.back.service_config[0].uri
       }
-      image = "us-docker.pkg.dev/cloudrun/container/hello"
+      image = "us-central1-docker.pkg.dev/expert-fishstick/registry/front:latest"
     }
     service_account = google_service_account.front.email
   }
