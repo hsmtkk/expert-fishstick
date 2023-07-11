@@ -26,7 +26,33 @@ def new():
 def create():
     back_url = os.environ["BACK_URL"]
     todo = {"text": "hoge"}
-    response = requests.post(back_url, headers=get_headers(), json=todo)
+    response = requests.post(back_url, headers=get_headers(back_url), json=todo)
+    return redirect("/")
+
+
+@app.route("/todo/<int:id>", methods=["GET"])
+def read(id: int):
+    back_url = os.environ["BACK_URL"]
+    url = f"{back_url}/{id}"
+    response = requests.get(url, headers=get_headers(back_url))
+    todo = response.json()
+    return render_template("read.html", todo=todo)
+
+
+@app.route("/todo/<int:id>", methods=["POST"])
+def update(id: int):
+    back_url = os.environ["BACK_URL"]
+    url = f"{back_url}/{id}"
+    todo = {"text": "fuga"}
+    response = requests.put(url, headers=get_headers(back_url), json=todo)
+    return redirect("/")
+
+
+@app.route("/todo/delete/<int:id>", methods=["GET"])
+def delete(id: int):
+    back_url = os.environ["BACK_URL"]
+    url = f"{back_url}/{id}"
+    response = requests.delete(url, headers=get_headers(back_url))
     return redirect("/")
 
 
