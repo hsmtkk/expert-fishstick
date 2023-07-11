@@ -1,29 +1,33 @@
 import os
-import urllib.request
 
 import google.auth.transport.requests
 import google.oauth2.id_token
 import requests
-from flask import Flask, render_template
+from flask import Flask, redirect, render_template
 
 app = Flask(__name__)
 
 
-@app.route("/test")
-def test():
-    render_template("test.html")
-
-
-@app.route("/create", methods=["POST"])
-def create():
+@app.route("/todo", methods=["GET"])
+def scan():
     back_url = os.environ["BACK_URL"]
     print(f"{back_url=}")
-    requests.post(back_url, headers=get_headers(), json={"text": "hoge"})
+    response = requests.get(back_url, headers=get_headers())
+    todos = response.json()
+    return render_template("scan.html", todos=todos)
 
 
-@app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+@app.route("/todo/new", methods=["GET"])
+def new():
+    return render_template("new.html")
+
+
+@app.route("/todo", methods=["POST"])
+def create():
+    back_url = os.environ["BACK_URL"]
+    todo = {"text": "hoge"}
+    response = requests.post(back_url, headers=get_headers(), json=todo)
+    return redirect("/")
 
 
 def issue_id_token(endpoint: str) -> str:
@@ -34,6 +38,4 @@ def issue_id_token(endpoint: str) -> str:
 
 def get_headers(endpoint: str) -> dict[str, str]:
     id_token = issue_id_token(endpoint)
-    headers = dict()
-    headers["Authorization"] = f"Bearer {id_token}"
-    return headers
+    return {"Authorization": f"Bearer {id_token}"}

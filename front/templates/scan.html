@@ -1,0 +1,6 @@
+<table border="1">
+<tr><th>ID</th><th>Text</th></tr>
+{% for todo in todos %}
+  <tr><td>{{todo["id"]}}</td><td>{{todo["text"]}}</td></tr>
+{% endfor %}
+</table>
